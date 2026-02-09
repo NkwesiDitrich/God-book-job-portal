@@ -12,6 +12,7 @@ const MyJobs = () => {
   const [myJobs, setMyJobs] = useState([]);
   const [editingMode, setEditingMode] = useState(null);
   const [selectedJobId, setSelectedJobId] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const { isAuthorized, user } = useContext(Context);
 
   const navigateTo = useNavigate();
@@ -78,6 +79,7 @@ const MyJobs = () => {
           const remaining = myJobs.filter((job) => job._id !== jobId);
           setSelectedJobId(remaining[0]?._id || null);
         }
+        setShowModal(false);
       })
       .catch((error) => {
         toast.error(error.response.data.message);
@@ -106,188 +108,196 @@ const MyJobs = () => {
           </div>
           {myJobs.length > 0 ? (
             <>
-              <div className="myjobs-layout">
-                <div className="myjobs-list card-grid">
-                  {myJobs.map((element) => (
-                    <button
-                      type="button"
-                      key={element._id}
-                      className={`job-card myjobs-card ${
-                        selectedJobId === element._id ? "active" : ""
-                      }`}
-                      onClick={() => setSelectedJobId(element._id)}
-                    >
-                      <h3>{element.title}</h3>
-                      <p>{element.category}</p>
-                      <div className="job-meta">
-                        <span className="job-badge">{element.country}</span>
-                        <span className="job-badge">{element.city}</span>
-                      </div>
-                    </button>
-                  ))}
-                </div>
+              <div className="card-grid">
+                {myJobs.map((element) => (
+                  <button
+                    type="button"
+                    key={element._id}
+                    className="job-card myjobs-card"
+                    onClick={() => {
+                      setSelectedJobId(element._id);
+                      setShowModal(true);
+                    }}
+                  >
+                    <h3>{element.title}</h3>
+                    <p>{element.category}</p>
+                    <div className="job-meta">
+                      <span className="job-badge">{element.country}</span>
+                      <span className="job-badge">{element.city}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
 
-                <div className="myjobs-detail">
-                  {myJobs
-                    .filter((job) => job._id === selectedJobId)
-                    .map((element) => (
-                      <div className="detail-card" key={element._id}>
-                        <h2>{element.title}</h2>
-                        <p className="muted">{element.category}</p>
-                        <div className="detail-grid">
-                          <div className="detail-pill">Country: {element.country}</div>
-                          <div className="detail-pill">City: {element.city}</div>
-                          <div className="detail-pill">Location: {element.location}</div>
-                          <div className="detail-pill">
-                            Salary:{" "}
-                            {element.fixedSalary
-                              ? element.fixedSalary
-                              : `${element.salaryFrom} - ${element.salaryTo}`}
+              {showModal && (
+                <div className="modal-overlay" onClick={() => setShowModal(false)}>
+                  <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+                    {myJobs
+                      .filter((job) => job._id === selectedJobId)
+                      .map((element) => (
+                        <div key={element._id}>
+                          <div className="modal-header">
+                            <h2>{element.title}</h2>
+                            <button className="modal-close" onClick={() => setShowModal(false)}>
+                              &times;
+                            </button>
                           </div>
-                        </div>
+                          <p className="muted">{element.category}</p>
+                          <div className="detail-grid">
+                            <div className="detail-pill">Country: {element.country}</div>
+                            <div className="detail-pill">City: {element.city}</div>
+                            <div className="detail-pill">Location: {element.location}</div>
+                            <div className="detail-pill">
+                              Salary:{" "}
+                              {element.fixedSalary
+                                ? element.fixedSalary
+                                : `${element.salaryFrom} - ${element.salaryTo}`}
+                            </div>
+                          </div>
 
-                        <div className="form-grid" style={{ marginTop: "16px" }}>
-                          <label>Title</label>
-                          <input
-                            type="text"
-                            disabled={editingMode !== element._id}
-                            value={element.title}
-                            onChange={(e) =>
-                              handleInputChange(element._id, "title", e.target.value)
-                            }
-                          />
-
-                          <label>Category</label>
-                          <select
-                            value={element.category}
-                            onChange={(e) =>
-                              handleInputChange(element._id, "category", e.target.value)
-                            }
-                            disabled={editingMode !== element._id}
-                          >
-                            <option value="Graphics & Design">Graphics & Design</option>
-                            <option value="Mobile App Development">Mobile App Development</option>
-                            <option value="Frontend Web Development">Frontend Web Development</option>
-                            <option value="MERN Stack Development">MERN STACK Development</option>
-                            <option value="Account & Finance">Account & Finance</option>
-                            <option value="Artificial Intelligence">Artificial Intelligence</option>
-                            <option value="Video Animation">Video Animation</option>
-                            <option value="MEAN Stack Development">MEAN STACK Development</option>
-                            <option value="MEVN Stack Development">MEVN STACK Development</option>
-                            <option value="Data Entry Operator">Data Entry Operator</option>
-                          </select>
-
-                          <label>Country</label>
-                          <input
-                            type="text"
-                            disabled={editingMode !== element._id}
-                            value={element.country}
-                            onChange={(e) =>
-                              handleInputChange(element._id, "country", e.target.value)
-                            }
-                          />
-
-                          <label>City</label>
-                          <input
-                            type="text"
-                            disabled={editingMode !== element._id}
-                            value={element.city}
-                            onChange={(e) =>
-                              handleInputChange(element._id, "city", e.target.value)
-                            }
-                          />
-
-                          <label>Location</label>
-                          <input
-                            type="text"
-                            disabled={editingMode !== element._id}
-                            value={element.location}
-                            onChange={(e) =>
-                              handleInputChange(element._id, "location", e.target.value)
-                            }
-                          />
-
-                          <label>Salary</label>
-                          {element.fixedSalary ? (
+                          <div className="form-grid" style={{ marginTop: "16px" }}>
+                            <label>Title</label>
                             <input
-                              type="number"
+                              type="text"
                               disabled={editingMode !== element._id}
-                              value={element.fixedSalary}
+                              value={element.title}
                               onChange={(e) =>
-                                handleInputChange(element._id, "fixedSalary", e.target.value)
+                                handleInputChange(element._id, "title", e.target.value)
                               }
                             />
-                          ) : (
-                            <div className="job_post salary_wrapper">
-                              <div className="ranged_salary">
-                                <input
-                                  type="number"
-                                  disabled={editingMode !== element._id}
-                                  value={element.salaryFrom}
-                                  onChange={(e) =>
-                                    handleInputChange(element._id, "salaryFrom", e.target.value)
-                                  }
-                                />
-                                <input
-                                  type="number"
-                                  disabled={editingMode !== element._id}
-                                  value={element.salaryTo}
-                                  onChange={(e) =>
-                                    handleInputChange(element._id, "salaryTo", e.target.value)
-                                  }
-                                />
-                              </div>
-                            </div>
-                          )}
 
-                          <label>Description</label>
-                          <textarea
-                            rows={5}
-                            disabled={editingMode !== element._id}
-                            value={element.description}
-                            onChange={(e) =>
-                              handleInputChange(element._id, "description", e.target.value)
-                            }
-                          />
-                        </div>
+                            <label>Category</label>
+                            <select
+                              value={element.category}
+                              onChange={(e) =>
+                                handleInputChange(element._id, "category", e.target.value)
+                              }
+                              disabled={editingMode !== element._id}
+                            >
+                              <option value="Graphics & Design">Graphics & Design</option>
+                              <option value="Mobile App Development">Mobile App Development</option>
+                              <option value="Frontend Web Development">Frontend Web Development</option>
+                              <option value="MERN Stack Development">MERN STACK Development</option>
+                              <option value="Account & Finance">Account & Finance</option>
+                              <option value="Artificial Intelligence">Artificial Intelligence</option>
+                              <option value="Video Animation">Video Animation</option>
+                              <option value="MEAN Stack Development">MEAN STACK Development</option>
+                              <option value="MEVN Stack Development">MEVN STACK Development</option>
+                              <option value="Data Entry Operator">Data Entry Operator</option>
+                            </select>
 
-                        <div className="button_wrapper" style={{ marginTop: "16px" }}>
-                          <div className="edit_btn_wrapper">
-                            {editingMode === element._id ? (
-                              <>
-                                <button
-                                  onClick={() => handleUpdateJob(element._id)}
-                                  className="check_btn"
-                                >
-                                  <FaCheck />
-                                </button>
-                                <button
-                                  onClick={() => handleDisableEdit()}
-                                  className="cross_btn"
-                                >
-                                  <RxCross2 />
-                                </button>
-                              </>
+                            <label>Country</label>
+                            <input
+                              type="text"
+                              disabled={editingMode !== element._id}
+                              value={element.country}
+                              onChange={(e) =>
+                                handleInputChange(element._id, "country", e.target.value)
+                              }
+                            />
+
+                            <label>City</label>
+                            <input
+                              type="text"
+                              disabled={editingMode !== element._id}
+                              value={element.city}
+                              onChange={(e) =>
+                                handleInputChange(element._id, "city", e.target.value)
+                              }
+                            />
+
+                            <label>Location</label>
+                            <input
+                              type="text"
+                              disabled={editingMode !== element._id}
+                              value={element.location}
+                              onChange={(e) =>
+                                handleInputChange(element._id, "location", e.target.value)
+                              }
+                            />
+
+                            <label>Salary</label>
+                            {element.fixedSalary ? (
+                              <input
+                                type="number"
+                                disabled={editingMode !== element._id}
+                                value={element.fixedSalary}
+                                onChange={(e) =>
+                                  handleInputChange(element._id, "fixedSalary", e.target.value)
+                                }
+                              />
                             ) : (
-                              <button
-                                onClick={() => handleEnableEdit(element._id)}
-                                className="edit_btn"
-                              >
-                                Edit
-                              </button>
+                              <div className="job_post salary_wrapper">
+                                <div className="ranged_salary">
+                                  <input
+                                    type="number"
+                                    disabled={editingMode !== element._id}
+                                    value={element.salaryFrom}
+                                    onChange={(e) =>
+                                      handleInputChange(element._id, "salaryFrom", e.target.value)
+                                    }
+                                  />
+                                  <input
+                                    type="number"
+                                    disabled={editingMode !== element._id}
+                                    value={element.salaryTo}
+                                    onChange={(e) =>
+                                      handleInputChange(element._id, "salaryTo", e.target.value)
+                                    }
+                                  />
+                                </div>
+                              </div>
                             )}
+
+                            <label>Description</label>
+                            <textarea
+                              rows={5}
+                              disabled={editingMode !== element._id}
+                              value={element.description}
+                              onChange={(e) =>
+                                handleInputChange(element._id, "description", e.target.value)
+                              }
+                            />
                           </div>
-                          <button
-                            onClick={() => handleDeleteJob(element._id)}
-                            className="delete_btn"
-                          >
-                            Delete
-                          </button>
+
+                          <div className="button_wrapper" style={{ marginTop: "16px" }}>
+                            <div className="edit_btn_wrapper">
+                              {editingMode === element._id ? (
+                                <>
+                                  <button
+                                    onClick={() => handleUpdateJob(element._id)}
+                                    className="check_btn"
+                                  >
+                                    <FaCheck />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDisableEdit()}
+                                    className="cross_btn"
+                                  >
+                                    <RxCross2 />
+                                  </button>
+                                </>
+                              ) : (
+                                <button
+                                  onClick={() => handleEnableEdit(element._id)}
+                                  className="edit_btn"
+                                >
+                                  Edit
+                                </button>
+                              )}
+                            </div>
+                            <button
+                              onClick={() => handleDeleteJob(element._id)}
+                              className="delete_btn"
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </>
           ) : (
             <p>
