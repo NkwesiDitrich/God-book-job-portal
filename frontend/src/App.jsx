@@ -22,20 +22,26 @@ const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
 const App = () => {
   const { isAuthorized, setIsAuthorized, setUser } = useContext(Context);
   useEffect(() => {
+    let mounted = true;
     const fetchUser = async () => {
       try {
         const response = await axios.get(
           `${API_BASE}/api/v1/user/getuser`,
           { withCredentials: true }
         );
+        if (!mounted) return;
         setUser(response.data.user);
         setIsAuthorized(true);
       } catch (error) {
+        if (!mounted) return;
         setIsAuthorized(false);
       }
     };
     fetchUser();
-  }, [isAuthorized]);
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <>

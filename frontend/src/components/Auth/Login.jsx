@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Context } from "../../main";
@@ -12,6 +12,7 @@ const Login = () => {
   const [role, setRole] = useState("");
 
   const { isAuthorized, setIsAuthorized } = useContext(Context);
+  const navigateTo = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -31,6 +32,7 @@ const Login = () => {
       setPassword("");
       setRole("");
       setIsAuthorized(true);
+      navigateTo("/");
     } catch (error) {
       toast.error(error.response.data.message);
     }
