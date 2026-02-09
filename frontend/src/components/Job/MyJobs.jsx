@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { FaCheck } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
 import { Context } from "../../main";
+import { isEmployer } from "../../utils/roles";
 import { useNavigate } from "react-router-dom";
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
@@ -35,7 +36,7 @@ const MyJobs = () => {
     };
     fetchJobs();
   }, []);
-  if (!isAuthorized || (user && user.role !== "Employer")) {
+  if (!isAuthorized || !isEmployer(user)) {
     navigateTo("/");
   }
 

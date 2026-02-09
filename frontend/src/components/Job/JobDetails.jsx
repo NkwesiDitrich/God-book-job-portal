@@ -3,6 +3,7 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../../main";
+import { isEmployer } from "../../utils/roles";
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
 const JobDetails = () => {
@@ -53,7 +54,7 @@ const JobDetails = () => {
                 : `${job.salaryFrom} - ${job.salaryTo}`}
             </p>
           </div>
-          {user && user.role === "Employer" ? (
+          {isEmployer(user) ? (
             <p className="muted">
               You are logged in as an Employer. Switch to a Job Seeker account to apply.
             </p>

@@ -3,6 +3,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../../main";
+import { isEmployer } from "../../utils/roles";
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
 const PostJob = () => {
@@ -71,7 +72,7 @@ const PostJob = () => {
   };
 
   const navigateTo = useNavigate();
-  if (!isAuthorized || (user && user.role !== "Employer")) {
+  if (!isAuthorized || !isEmployer(user)) {
     navigateTo("/");
   }
 

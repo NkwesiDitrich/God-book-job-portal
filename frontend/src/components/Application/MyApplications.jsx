@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../../main";
+import { isEmployer, isJobSeeker } from "../../utils/roles";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +19,7 @@ const MyApplications = () => {
 
   useEffect(() => {
     try {
-      if (user && user.role === "Employer") {
+      if (isEmployer(user)) {
         axios
           .get(`${API_BASE}/api/v1/application/employer/getall`, {
             withCredentials: true,
@@ -76,7 +77,7 @@ const MyApplications = () => {
 
   return (
     <section className="my_applications page">
-      {user && user.role === "Job Seeker" ? (
+      {isJobSeeker(user) ? (
         <div className="container">
           <div className="section-header">
             <h2>

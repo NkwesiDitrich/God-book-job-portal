@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { Link, Navigate } from "react-router-dom";
 import { Context } from "../../main";
+import { isEmployer } from "../../utils/roles";
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
@@ -45,7 +46,7 @@ const Jobs = () => {
           <p className="muted">
             Browse and filter open roles to find your next opportunity.
           </p>
-          {user?.role === "Employer" ? (
+          {isEmployer(user) ? (
             <div style={{ marginTop: "8px" }}>
               <Link to="/job/post" className="btn btn-primary">
                 Post a New Job

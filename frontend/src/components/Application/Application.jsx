@@ -3,6 +3,7 @@ import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { Context } from "../../main";
+import { isEmployer } from "../../utils/roles";
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
@@ -108,7 +109,7 @@ const Application = () => {
   if (!isAuthorized) {
     return <Navigate to="/login" />;
   }
-  if (user && user.role === "Employer") {
+  if (isEmployer(user)) {
     return (
       <section className="application">
         <div className="container">

@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { FaBuilding, FaBriefcase, FaSearch, FaUsers } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Context } from "../../main";
+import { isEmployer } from "../../utils/roles";
 
 const HeroSection = () => {
   const { user } = useContext(Context);
@@ -42,7 +43,7 @@ const HeroSection = () => {
               <FaSearch /> Find Jobs
             </Link>
             <Link
-              to={user?.role === "Employer" ? "/job/post" : "/login"}
+              to={isEmployer(user) ? "/job/post" : "/login"}
               className="btn btn-ghost"
             >
               Post a Job

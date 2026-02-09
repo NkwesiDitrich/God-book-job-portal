@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaBriefcase } from "react-icons/fa";
+import { isEmployer } from "../../utils/roles";
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
@@ -56,6 +57,11 @@ const Navbar = () => {
                 : "My Applications"}
             </Link>
           </li>
+          <li>
+            <Link to={"/profile"} onClick={() => setShow(false)}>
+              Profile
+            </Link>
+          </li>
           {user && user.role === "Employer" ? (
             <>
               <li>
@@ -73,7 +79,11 @@ const Navbar = () => {
         </ul>
 
         <div className="nav-actions">
-          {user?.name && <span className="nav-user">Hi, {user.name}</span>}
+          {user?.name && (
+            <span className="nav-user">
+              Hi, {user.name} {isEmployer(user) ? "(Employer)" : "(Job Seeker)"}
+            </span>
+          )}
           <button className="btn btn-ghost" onClick={handleLogout}>
             Logout
           </button>
