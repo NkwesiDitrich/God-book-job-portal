@@ -1,6 +1,7 @@
 import express from "express";
 import {
   employerGetAllApplications,
+  employerDeleteApplication,
   jobseekerDeleteApplication,
   jobseekerGetAllApplications,
   postApplication,
@@ -13,5 +14,6 @@ router.post("/post", isAuthenticated, postApplication);
 router.get("/employer/getall", isAuthenticated, employerGetAllApplications);
 router.get("/jobseeker/getall", isAuthenticated, jobseekerGetAllApplications);
 router.delete("/delete/:id", isAuthenticated, jobseekerDeleteApplication);
+router.delete("/employer/delete/:id", isAuthenticated, employerDeleteApplication);
 
 export default router;

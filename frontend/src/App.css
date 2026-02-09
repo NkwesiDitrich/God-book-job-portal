@@ -475,11 +475,30 @@ img {
 .job-card h3 {
   font-size: 1.2rem;
   margin-bottom: 6px;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .job-card p {
   color: var(--muted);
   margin-bottom: 6px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.job-card {
+  min-height: 220px;
+}
+
+.job-card .job-meta {
+  flex-wrap: wrap;
 }
 
 .job-card .job-meta {

@@ -46,8 +46,12 @@ const MyApplications = () => {
 
   const deleteApplication = (id) => {
     try {
+      const endpoint =
+        user && user.role === "Employer"
+          ? `${API_BASE}/api/v1/application/employer/delete/${id}`
+          : `${API_BASE}/api/v1/application/delete/${id}`;
       axios
-        .delete(`${API_BASE}/api/v1/application/delete/${id}`, {
+        .delete(endpoint, {
           withCredentials: true,
         })
         .then((res) => {
@@ -118,6 +122,7 @@ const MyApplications = () => {
                   element={element}
                   key={element._id}
                   openModal={openModal}
+                  deleteApplication={deleteApplication}
                 />
               );
             })
@@ -171,7 +176,7 @@ const JobSeekerCard = ({ element, deleteApplication, openModal }) => {
   );
 };
 
-const EmployerCard = ({ element, openModal }) => {
+const EmployerCard = ({ element, openModal, deleteApplication }) => {
   return (
     <>
       <div className="job_seeker_card">
@@ -198,6 +203,11 @@ const EmployerCard = ({ element, openModal }) => {
             alt="resume"
             onClick={() => openModal(element.resume.url)}
           />
+        </div>
+        <div className="btn_area">
+          <button onClick={() => deleteApplication(element._id)}>
+            Delete Application
+          </button>
         </div>
       </div>
     </>

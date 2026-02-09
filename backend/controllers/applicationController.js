@@ -148,6 +148,33 @@ export const jobseekerDeleteApplication = catchAsyncErrors(
     if (!application) {
       return next(new ErrorHandler("Application not found!", 404));
     }
+    if (application.applicantID.user.toString() !== req.user._id.toString()) {
+      return next(new ErrorHandler("Not authorized to delete this application.", 403));
+    }
+    await application.deleteOne();
+    res.status(200).json({
+      success: true,
+      message: "Application Deleted!",
+    });
+  }
+);
+
+export const employerDeleteApplication = catchAsyncErrors(
+  async (req, res, next) => {
+    const { role } = req.user;
+    if (role === "Job Seeker") {
+      return next(
+        new ErrorHandler("Job Seeker not allowed to access this resource.", 400)
+      );
+    }
+    const { id } = req.params;
+    const application = await Application.findById(id);
+    if (!application) {
+      return next(new ErrorHandler("Application not found!", 404));
+    }
+    if (application.employerID.user.toString() !== req.user._id.toString()) {
+      return next(new ErrorHandler("Not authorized to delete this application.", 403));
+    }
     await application.deleteOne();
     res.status(200).json({
       success: true,
