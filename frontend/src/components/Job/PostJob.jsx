@@ -76,7 +76,13 @@ const PostJob = () => {
     <>
       <div className="job_post page">
         <div className="container">
-          <h3>POST NEW JOB</h3>
+          <div className="section-header">
+            <h2>
+              Post a
+              <span>New Job</span>
+            </h2>
+            <p>Share your role and start receiving applications.</p>
+          </div>
           <form onSubmit={handleJobPost}>
             <div className="wrapper">
               <input
@@ -177,7 +183,9 @@ const PostJob = () => {
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Job Description"
             />
-            <button type="submit">Create Job</button>
+            <button type="submit" className="btn btn-primary">
+              Create Job
+            </button>
           </form>
         </div>
       </div>

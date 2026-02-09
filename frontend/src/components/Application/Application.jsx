@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { Context } from "../../main";
 
 const Application = () => {
@@ -88,7 +88,7 @@ const Application = () => {
       setAddress("");
       setResume(null);
       toast.success(data.message);
-      navigateTo("/job/getall");
+      navigateTo("/applications/me");
     } catch (error) {
       const errorMessage = error.response?.data?.message || 
         "Something went wrong. Please try again later.";
@@ -103,81 +103,93 @@ const Application = () => {
     }
   };
 
-  if (!isAuthorized || (user && user.role === "Employer")) {
-    navigateTo("/");
+  if (!isAuthorized) {
+    return <Navigate to="/login" />;
+  }
+  if (user && user.role === "Employer") {
+    return (
+      <section className="application">
+        <div className="container">
+          <div className="form-card">
+            <h3>Action Not Allowed</h3>
+            <p className="muted">
+              Employers cannot apply for jobs. Please login as a Job Seeker to submit applications.
+            </p>
+            <Link to="/job/getall" className="btn btn-ghost">
+              Back to Jobs
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
   }
 
   return (
     <section className="application">
       <div className="container">
-        <h3>Application Form</h3>
-        <form onSubmit={handleApplication}>
-          <input
-            type="text"
-            placeholder="Your Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-          <input
-            type="email"
-            placeholder="Your Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="number"
-            placeholder="Your Phone Number"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Your Address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            required
-          />
-          <textarea
-            placeholder="Cover Letter..."
-            value={coverLetter}
-            onChange={(e) => setCoverLetter(e.target.value)}
-            required
-          />
-          <div>
-            <label
-              style={{ textAlign: "start", display: "block", fontSize: "20px" }}
-            >
-              Upload Resume 
-              <p style={{ color: "red", fontSize: "12px", margin: "5px 0 0 0" }}>
-                (Supported formats: PNG, JPEG, WEBP. Max size: 2MB)
-              </p>
-            </label>
+        <div className="form-card">
+          <h3>Application Form</h3>
+          <p className="muted">Complete the details below to apply.</p>
+          <form onSubmit={handleApplication} className="form-grid">
             <input
-              type="file"
-              accept=".png,.jpg,.jpeg,.webp"
-              onChange={handleFileChange}
-              style={{ width: "100%" }}
+              type="text"
+              placeholder="Your Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
             />
-            {fileError && (
-              <p style={{ color: "red", fontSize: "14px", marginTop: "5px" }}>
-                {fileError}
+            <input
+              type="email"
+              placeholder="Your Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              type="number"
+              placeholder="Your Phone Number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Your Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              required
+            />
+            <textarea
+              placeholder="Cover Letter..."
+              value={coverLetter}
+              onChange={(e) => setCoverLetter(e.target.value)}
+              required
+            />
+            <div>
+              <label>Upload Resume</label>
+              <p className="form-hint">
+                Supported formats: PNG, JPEG, WEBP. Max size: 2MB.
               </p>
-            )}
-          </div>
-          <button 
-            type="submit" 
-            disabled={loading}
-            style={{ 
-              opacity: loading ? 0.7 : 1,
-              cursor: loading ? "not-allowed" : "pointer" 
-            }}
-          >
-            {loading ? "Submitting..." : "Send Application"}
-          </button>
-        </form>
+              <input
+                type="file"
+                accept=".png,.jpg,.jpeg,.webp"
+                onChange={handleFileChange}
+              />
+              {fileError && <p className="form-hint">{fileError}</p>}
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn btn-primary"
+              style={{
+                opacity: loading ? 0.7 : 1,
+                cursor: loading ? "not-allowed" : "pointer",
+              }}
+            >
+              {loading ? "Submitting..." : "Send Application"}
+            </button>
+          </form>
+        </div>
       </div>
     </section>
   );

@@ -87,7 +87,13 @@ const MyJobs = () => {
     <>
       <div className="myJobs page">
         <div className="container">
-          <h1>Your Posted Jobs</h1>
+          <div className="section-header">
+            <h2>
+              Your
+              <span>Posted Jobs</span>
+            </h2>
+            <p>Edit, update, or delete job postings in one place.</p>
+          </div>
           {myJobs.length > 0 ? (
             <>
               <div className="banner">

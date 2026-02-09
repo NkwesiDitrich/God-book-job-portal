@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../../main";
@@ -24,50 +24,46 @@ const JobDetails = () => {
   }, []);
 
   if (!isAuthorized) {
-    navigateTo("/login");
+    return <Navigate to="/login" />;
   }
 
   return (
     <section className="jobDetail page">
       <div className="container">
-        <h3>Job Details</h3>
-        <div className="banner">
-          <p>
-            Title: <span> {job.title}</span>
-          </p>
-          <p>
-            Category: <span>{job.category}</span>
-          </p>
-          <p>
-            Country: <span>{job.country}</span>
-          </p>
-          <p>
-            City: <span>{job.city}</span>
-          </p>
-          <p>
-            Location: <span>{job.location}</span>
-          </p>
-          <p>
-            Description: <span>{job.description}</span>
-          </p>
-          <p>
-            Job Posted On: <span>{job.jobPostedOn}</span>
-          </p>
-          <p>
-            Salary:{" "}
-            {job.fixedSalary ? (
-              <span>{job.fixedSalary}</span>
-            ) : (
-              <span>
-                {job.salaryFrom} - {job.salaryTo}
-              </span>
-            )}
-          </p>
+        <div className="detail-card">
+          <h2>{job.title}</h2>
+          <p className="muted">{job.category}</p>
+          <div className="detail-grid">
+            <div className="detail-pill">Country: {job.country}</div>
+            <div className="detail-pill">City: {job.city}</div>
+            <div className="detail-pill">Location: {job.location}</div>
+            <div className="detail-pill">Posted: {job.jobPostedOn}</div>
+          </div>
+          <div>
+            <h4>Description</h4>
+            <p className="muted">{job.description}</p>
+          </div>
+          <div>
+            <h4>Salary</h4>
+            <p className="muted">
+              {job.fixedSalary
+                ? job.fixedSalary
+                : `${job.salaryFrom} - ${job.salaryTo}`}
+            </p>
+          </div>
           {user && user.role === "Employer" ? (
-            <></>
-          ) : (
-            <Link to={`/application/${job._id}`}>Apply Now</Link>
-          )}
+            <p className="muted">
+              You are logged in as an Employer. Switch to a Job Seeker account to apply.
+            </p>
+          ) : null}
+          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+            <Link to={`/application/${job._id}`} className="btn btn-primary">
+              Apply Now
+            </Link>
+            <Link to="/job/getall" className="btn btn-ghost">
+              Back to Jobs
+            </Link>
+          </div>
         </div>
       </div>
     </section>

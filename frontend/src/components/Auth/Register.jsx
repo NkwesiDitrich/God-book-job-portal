@@ -1,9 +1,4 @@
 import React, { useContext, useState } from "react";
-import { FaRegUser } from "react-icons/fa";
-import { MdOutlineMailOutline } from "react-icons/md";
-import { RiLock2Fill } from "react-icons/ri";
-import { FaPencilAlt } from "react-icons/fa";
-import { FaPhoneFlip } from "react-icons/fa6";
 import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -43,8 +38,8 @@ const Register = () => {
     }
   };
 
-  if(isAuthorized){
-    return <Navigate to={'/'}/>
+  if (isAuthorized) {
+    return <Navigate to={"/"} />;
   }
 
 
@@ -52,78 +47,52 @@ const Register = () => {
     <>
       <section className="authPage">
         <div className="container">
-          <div className="header">
-            <img src="/careerconnect-black.png" alt="logo" />
-            <h3>Create a new account</h3>
-          </div>
-          <form>
-            <div className="inputTag">
-              <label>Register As</label>
+          <div className="form-card">
+            <h3>Create your account</h3>
+            <p className="muted">
+              Join the platform and start applying or hiring today.
+            </p>
+            <form className="form-grid">
               <div>
+                <label>Register As</label>
                 <select value={role} onChange={(e) => setRole(e.target.value)}>
                   <option value="">Select Role</option>
                   <option value="Employer">Employer</option>
                   <option value="Job Seeker">Job Seeker</option>
                 </select>
-                <FaRegUser />
               </div>
-            </div>
-            <div className="inputTag">
-              <label>Name</label>
-              <div>
-                <input
-                  type="text"
-                  placeholder="Enter your name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-                <FaPencilAlt />
-              </div>
-            </div>
-            <div className="inputTag">
-              <label>Email Address</label>
-              <div>
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <MdOutlineMailOutline />
-              </div>
-            </div>
-            <div className="inputTag">
-              <label>Phone Number</label>
-              <div>
-                <input
-                  type="number"
-                  placeholder="Enter your phone"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-                <FaPhoneFlip />
-              </div>
-            </div>
-            <div className="inputTag">
-              <label>Password</label>
-              <div>
-                <input
-                  type="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <RiLock2Fill />
-              </div>
-            </div>
-            <button type="submit" onClick={handleRegister}>
-              Register
-            </button>
-            <Link to={"/login"}>Login Now</Link>
-          </form>
-        </div>
-        <div className="banner">
-          <img src="/register.png" alt="login" />
+              <input
+                type="text"
+                placeholder="Full name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <input
+                type="email"
+                placeholder="Email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <input
+                type="number"
+                placeholder="Phone number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button type="submit" className="btn btn-primary" onClick={handleRegister}>
+                Create account
+              </button>
+              <Link to={"/login"} className="btn btn-ghost">
+                Already have an account
+              </Link>
+            </form>
+          </div>
         </div>
       </section>
     </>

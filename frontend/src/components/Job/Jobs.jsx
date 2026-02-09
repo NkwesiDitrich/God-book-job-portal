@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Context } from "../../main";
 
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
-  const { isAuthorized } = useContext(Context);
-  const navigateTo = useNavigate();
+  const [query, setQuery] = useState("");
+  const { isAuthorized, user } = useContext(Context);
   useEffect(() => {
     try {
       axios
@@ -21,25 +21,67 @@ const Jobs = () => {
     }
   }, []);
   if (!isAuthorized) {
-    navigateTo("/");
+    return <Navigate to="/login" />;
   }
+
+  const filteredJobs = useMemo(() => {
+    const list = jobs.jobs || [];
+    if (!query.trim()) return list;
+    const q = query.toLowerCase();
+    return list.filter((job) =>
+      [job.title, job.category, job.country, job.city]
+        .filter(Boolean)
+        .some((field) => field.toLowerCase().includes(q))
+    );
+  }, [jobs, query]);
 
   return (
     <section className="jobs page">
       <div className="container">
-        <h1>ALL AVAILABLE JOBS</h1>
-        <div className="banner">
-          {jobs.jobs &&
-            jobs.jobs.map((element) => {
+        <div className="jobs-header">
+          <h1>Find Jobs</h1>
+          <p className="muted">
+            Browse and filter open roles to find your next opportunity.
+          </p>
+          {user?.role === "Employer" ? (
+            <p className="muted">
+              You are logged in as an Employer. Switch to a Job Seeker account to submit applications.
+            </p>
+          ) : null}
+        </div>
+        <div className="jobs-search">
+          <input
+            type="text"
+            placeholder="Search by title, category, or location..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </div>
+        <div className="card-grid" style={{ marginTop: "24px" }}>
+          {filteredJobs.length > 0 ? (
+            filteredJobs.map((element) => {
               return (
-                <div className="card" key={element._id}>
-                  <p>{element.title}</p>
+                <div className="job-card" key={element._id}>
+                  <h3>{element.title}</h3>
                   <p>{element.category}</p>
-                  <p>{element.country}</p>
-                  <Link to={`/job/${element._id}`}>Job Details</Link>
+                  <div className="job-meta">
+                    <span className="job-badge">{element.country}</span>
+                    <span className="job-badge">{element.city}</span>
+                  </div>
+                  <div style={{ marginTop: "16px", display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                    <Link to={`/job/${element._id}`} className="btn btn-ghost">
+                      Job Details
+                    </Link>
+                    <Link to={`/application/${element._id}`} className="btn btn-primary">
+                      Apply Now
+                    </Link>
+                  </div>
                 </div>
               );
-            })}
+            })
+          ) : (
+            <p>No jobs match your search.</p>
+          )}
         </div>
       </div>
     </section>

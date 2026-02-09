@@ -1,5 +1,5 @@
 import React from "react";
-import { FaMicrosoft, FaApple } from "react-icons/fa";
+import { FaMicrosoft, FaApple, FaGoogle, FaAmazon } from "react-icons/fa";
 import { SiTesla } from "react-icons/si";
 
 const PopularCompanies = () => {
@@ -25,29 +25,51 @@ const PopularCompanies = () => {
       openPositions: 20,
       icon: <FaApple />,
     },
+    {
+      id: 4,
+      title: "Google",
+      location: "Remote",
+      openPositions: 14,
+      icon: <FaGoogle />,
+    },
+    {
+      id: 5,
+      title: "Amazon",
+      location: "Hybrid",
+      openPositions: 18,
+      icon: <FaAmazon />,
+    },
   ];
   return (
-    <div className="companies">
+    <section className="section">
       <div className="container">
-        <h3>TOP COMPANIES</h3>
-        <div className="banner">
+        <div className="section-header">
+          <h2>
+            Top
+            <span>Companies</span>
+          </h2>
+          <p>Explore companies actively hiring on the platform.</p>
+        </div>
+        <div className="card-grid">
           {companies.map((element) => {
             return (
-              <div className="card" key={element.id}>
+              <div className="company-card" key={element.id}>
                 <div className="content">
                   <div className="icon">{element.icon}</div>
                   <div className="text">
-                    <p>{element.title}</p>
+                    <strong>{element.title}</strong>
                     <p>{element.location}</p>
                   </div>
                 </div>
-                <button>Open Positions {element.openPositions}</button>
+                <p className="job-badge">
+                  Open Positions {element.openPositions}
+                </p>
               </div>
             );
           })}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

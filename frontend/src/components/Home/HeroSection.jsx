@@ -1,62 +1,66 @@
-import React from "react";
-import { FaBuilding, FaSuitcase, FaUsers, FaUserPlus } from "react-icons/fa";
+import React, { useContext } from "react";
+import { FaBuilding, FaBriefcase, FaSearch, FaUsers } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { Context } from "../../main";
 
 const HeroSection = () => {
-  const details = [
+  const { user } = useContext(Context);
+  const stats = [
     {
       id: 1,
-      title: "1,23,441",
-      subTitle: "Live Job",
-      icon: <FaSuitcase />,
+      title: "2.4M+",
+      subTitle: "Active Users",
+      icon: <FaUsers />,
     },
     {
       id: 2,
-      title: "91220",
+      title: "50K+",
       subTitle: "Companies",
       icon: <FaBuilding />,
     },
     {
       id: 3,
-      title: "2,34,200",
-      subTitle: "Job Seekers",
-      icon: <FaUsers />,
-    },
-    {
-      id: 4,
-      title: "1,03,761",
-      subTitle: "Employers",
-      icon: <FaUserPlus />,
+      title: "150K+",
+      subTitle: "Jobs Posted",
+      icon: <FaBriefcase />,
     },
   ];
   return (
     <>
       <div className="heroSection">
-        <div className="container">
-          <div className="title">
-            <h1>Find a job that suits</h1>
-            <h1>your interests and skills</h1>
-            <p>
-              Discover job opportunities that match your skills and passions.
-              Connect with employers seeking talent like yours for rewarding
-              careers.
-            </p>
+        <div className="container hero-inner">
+          <h1>
+            Find your Dream Job or
+            <span>Perfect Hire</span>
+          </h1>
+          <p>
+            Connect talented professionals with innovative companies. Your next
+            career move or ideal candidate is just a click away.
+          </p>
+          <div className="hero-actions">
+            <Link to="/job/getall" className="btn btn-primary">
+              <FaSearch /> Find Jobs
+            </Link>
+            <Link
+              to={user?.role === "Employer" ? "/job/post" : "/login"}
+              className="btn btn-ghost"
+            >
+              Post a Job
+            </Link>
           </div>
-          <div className="image">
-            <img src="/heroS.jpg" alt="hero" />
+          <div className="hero-stats">
+            {stats.map((element) => (
+              <div className="hero-stat" key={element.id}>
+                <div className="icon">{element.icon}</div>
+                <strong>{element.title}</strong>
+                <span>{element.subTitle}</span>
+              </div>
+            ))}
           </div>
         </div>
-        <div className="details">
-          {details.map((element) => {
-            return (
-              <div className="card" key={element.id}>
-                <div className="icon">{element.icon}</div>
-                <div className="content">
-                  <p>{element.title}</p>
-                  <p>{element.subTitle}</p>
-                </div>
-              </div>
-            );
-          })}
+        <div className="hero-bg">
+          <span className="blob-1" />
+          <span className="blob-2" />
         </div>
       </div>
     </>
