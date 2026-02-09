@@ -50,6 +50,11 @@ img {
   margin: 0 auto;
 }
 
+.container-wide {
+  width: min(1400px, 94vw);
+  margin: 0 auto;
+}
+
 .muted {
   color: var(--muted);
 }
@@ -763,4 +768,137 @@ img {
 .resume-modal img {
   width: 100%;
   border-radius: 12px;
+}
+
+/* Responsive system */
+@media (max-width: 1200px) {
+  .container {
+    width: min(1100px, 94vw);
+  }
+  .heroSection h1 {
+    font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+  }
+  .feature-card,
+  .stat-card,
+  .category-card,
+  .company-card,
+  .job-card {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 992px) {
+  .page {
+    padding-top: 84px;
+  }
+  .site-header {
+    height: 64px;
+  }
+  .nav-actions {
+    display: none;
+  }
+  .heroSection {
+    min-height: auto;
+    padding-top: 60px;
+  }
+  .hero-stats {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+  .jobs-search {
+    flex-direction: column;
+  }
+  .jobDetail .detail-card {
+    padding: 22px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container,
+  .container-wide {
+    width: 92vw;
+  }
+  .heroSection .hero-inner {
+    padding: 40px 0 30px;
+  }
+  .hero-actions {
+    flex-direction: column;
+  }
+  .section {
+    padding: 60px 0;
+  }
+  .section-header h2 {
+    font-size: clamp(1.8rem, 6vw, 2.6rem);
+  }
+  .feature-card,
+  .stat-card,
+  .company-card,
+  .job-card {
+    border-radius: 16px;
+  }
+  .job_seeker_card {
+    grid-template-columns: 1fr;
+  }
+  .job_seeker_card .btn_area {
+    justify-content: flex-start;
+  }
+  .form-card {
+    padding: 22px;
+  }
+  .jobs .jobs-header h1,
+  .myJobs h1 {
+    font-size: 1.8rem;
+  }
+  .footerShow {
+    padding: 40px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .site-header {
+    height: 60px;
+  }
+  .brand {
+    font-size: 1.05rem;
+  }
+  .brand-icon {
+    width: 32px;
+    height: 32px;
+  }
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .hero-stats {
+    grid-template-columns: 1fr;
+  }
+  .jobDetail .detail-grid {
+    grid-template-columns: 1fr;
+  }
+  .jobDetail .detail-card h2 {
+    font-size: 1.6rem;
+  }
+  .resume-modal .modal-content {
+    padding: 12px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .container {
+    width: min(1400px, 88vw);
+  }
+  .heroSection h1 {
+    font-size: clamp(3.5rem, 4vw, 4.5rem);
+  }
+  .section {
+    padding: 90px 0;
+  }
+}
+
+@media (min-width: 2200px) {
+  .container {
+    width: min(1600px, 80vw);
+  }
+  .heroSection h1 {
+    font-size: 4.8rem;
+  }
 }
