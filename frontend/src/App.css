@@ -712,6 +712,40 @@ img {
   padding: 14px 0;
 }
 
+/* My Jobs new layout */
+.myjobs-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.myjobs-card {
+  text-align: left;
+  width: 100%;
+  background: #fff;
+  cursor: pointer;
+  border: 1px solid var(--border);
+}
+
+.myjobs-card.active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 167, 243, 0.15);
+}
+
+.myjobs-detail .detail-card {
+  position: sticky;
+  top: 92px;
+}
+
+@media (max-width: 992px) {
+  .myjobs-layout {
+    grid-template-columns: 1fr;
+  }
+  .myjobs-detail .detail-card {
+    position: static;
+  }
+}
 /* Footer */
 .footerShow {
   background: #f1f5f9;

@@ -11,6 +11,7 @@ const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
 const MyJobs = () => {
   const [myJobs, setMyJobs] = useState([]);
   const [editingMode, setEditingMode] = useState(null);
+  const [selectedJobId, setSelectedJobId] = useState(null);
   const { isAuthorized, user } = useContext(Context);
 
   const navigateTo = useNavigate();
@@ -23,6 +24,9 @@ const MyJobs = () => {
           { withCredentials: true }
         );
         setMyJobs(data.myJobs);
+        if (data.myJobs && data.myJobs.length > 0) {
+          setSelectedJobId(data.myJobs[0]._id);
+        }
       } catch (error) {
         toast.error(error.response.data.message);
         setMyJobs([]);
@@ -70,6 +74,10 @@ const MyJobs = () => {
       .then((res) => {
         toast.success(res.data.message);
         setMyJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
+        if (selectedJobId === jobId) {
+          const remaining = myJobs.filter((job) => job._id !== jobId);
+          setSelectedJobId(remaining[0]?._id || null);
+        }
       })
       .catch((error) => {
         toast.error(error.response.data.message);
@@ -98,256 +106,187 @@ const MyJobs = () => {
           </div>
           {myJobs.length > 0 ? (
             <>
-              <div className="banner">
-                {myJobs.map((element) => (
-                  <div className="card" key={element._id}>
-                    <div className="content">
-                      <div className="short_fields">
-                        <div>
-                          <span>Title:</span>
+              <div className="myjobs-layout">
+                <div className="myjobs-list card-grid">
+                  {myJobs.map((element) => (
+                    <button
+                      type="button"
+                      key={element._id}
+                      className={`job-card myjobs-card ${
+                        selectedJobId === element._id ? "active" : ""
+                      }`}
+                      onClick={() => setSelectedJobId(element._id)}
+                    >
+                      <h3>{element.title}</h3>
+                      <p>{element.category}</p>
+                      <div className="job-meta">
+                        <span className="job-badge">{element.country}</span>
+                        <span className="job-badge">{element.city}</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+
+                <div className="myjobs-detail">
+                  {myJobs
+                    .filter((job) => job._id === selectedJobId)
+                    .map((element) => (
+                      <div className="detail-card" key={element._id}>
+                        <h2>{element.title}</h2>
+                        <p className="muted">{element.category}</p>
+                        <div className="detail-grid">
+                          <div className="detail-pill">Country: {element.country}</div>
+                          <div className="detail-pill">City: {element.city}</div>
+                          <div className="detail-pill">Location: {element.location}</div>
+                          <div className="detail-pill">
+                            Salary:{" "}
+                            {element.fixedSalary
+                              ? element.fixedSalary
+                              : `${element.salaryFrom} - ${element.salaryTo}`}
+                          </div>
+                        </div>
+
+                        <div className="form-grid" style={{ marginTop: "16px" }}>
+                          <label>Title</label>
                           <input
                             type="text"
-                            disabled={
-                              editingMode !== element._id ? true : false
-                            }
+                            disabled={editingMode !== element._id}
                             value={element.title}
                             onChange={(e) =>
-                              handleInputChange(
-                                element._id,
-                                "title",
-                                e.target.value
-                              )
+                              handleInputChange(element._id, "title", e.target.value)
                             }
                           />
-                        </div>
-                        <div>
-                          {" "}
-                          <span>Country:</span>
-                          <input
-                            type="text"
-                            disabled={
-                              editingMode !== element._id ? true : false
-                            }
-                            value={element.country}
-                            onChange={(e) =>
-                              handleInputChange(
-                                element._id,
-                                "country",
-                                e.target.value
-                              )
-                            }
-                          />
-                        </div>
-                        <div>
-                          <span>City:</span>
-                          <input
-                            type="text"
-                            disabled={
-                              editingMode !== element._id ? true : false
-                            }
-                            value={element.city}
-                            onChange={(e) =>
-                              handleInputChange(
-                                element._id,
-                                "city",
-                                e.target.value
-                              )
-                            }
-                          />
-                        </div>
-                        <div>
-                          <span>Category:</span>
+
+                          <label>Category</label>
                           <select
                             value={element.category}
                             onChange={(e) =>
-                              handleInputChange(
-                                element._id,
-                                "category",
-                                e.target.value
-                              )
+                              handleInputChange(element._id, "category", e.target.value)
                             }
-                            disabled={
-                              editingMode !== element._id ? true : false
-                            }
+                            disabled={editingMode !== element._id}
                           >
-                            <option value="Graphics & Design">
-                              Graphics & Design
-                            </option>
-                            <option value="Mobile App Development">
-                              Mobile App Development
-                            </option>
-                            <option value="Frontend Web Development">
-                              Frontend Web Development
-                            </option>
-                            <option value="MERN Stack Development">
-                              MERN STACK Development
-                            </option>
-                            <option value="Account & Finance">
-                              Account & Finance
-                            </option>
-                            <option value="Artificial Intelligence">
-                              Artificial Intelligence
-                            </option>
-                            <option value="Video Animation">
-                              Video Animation
-                            </option>
-                            <option value="MEAN Stack Development">
-                              MEAN STACK Development
-                            </option>
-                            <option value="MEVN Stack Development">
-                              MEVN STACK Development
-                            </option>
-                            <option value="Data Entry Operator">
-                              Data Entry Operator
-                            </option>
+                            <option value="Graphics & Design">Graphics & Design</option>
+                            <option value="Mobile App Development">Mobile App Development</option>
+                            <option value="Frontend Web Development">Frontend Web Development</option>
+                            <option value="MERN Stack Development">MERN STACK Development</option>
+                            <option value="Account & Finance">Account & Finance</option>
+                            <option value="Artificial Intelligence">Artificial Intelligence</option>
+                            <option value="Video Animation">Video Animation</option>
+                            <option value="MEAN Stack Development">MEAN STACK Development</option>
+                            <option value="MEVN Stack Development">MEVN STACK Development</option>
+                            <option value="Data Entry Operator">Data Entry Operator</option>
                           </select>
-                        </div>
-                        <div>
-                          <span>
-                            Salary:{" "}
-                            {element.fixedSalary ? (
-                              <input
-                                type="number"
-                                disabled={
-                                  editingMode !== element._id ? true : false
-                                }
-                                value={element.fixedSalary}
-                                onChange={(e) =>
-                                  handleInputChange(
-                                    element._id,
-                                    "fixedSalary",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            ) : (
-                              <div>
+
+                          <label>Country</label>
+                          <input
+                            type="text"
+                            disabled={editingMode !== element._id}
+                            value={element.country}
+                            onChange={(e) =>
+                              handleInputChange(element._id, "country", e.target.value)
+                            }
+                          />
+
+                          <label>City</label>
+                          <input
+                            type="text"
+                            disabled={editingMode !== element._id}
+                            value={element.city}
+                            onChange={(e) =>
+                              handleInputChange(element._id, "city", e.target.value)
+                            }
+                          />
+
+                          <label>Location</label>
+                          <input
+                            type="text"
+                            disabled={editingMode !== element._id}
+                            value={element.location}
+                            onChange={(e) =>
+                              handleInputChange(element._id, "location", e.target.value)
+                            }
+                          />
+
+                          <label>Salary</label>
+                          {element.fixedSalary ? (
+                            <input
+                              type="number"
+                              disabled={editingMode !== element._id}
+                              value={element.fixedSalary}
+                              onChange={(e) =>
+                                handleInputChange(element._id, "fixedSalary", e.target.value)
+                              }
+                            />
+                          ) : (
+                            <div className="job_post salary_wrapper">
+                              <div className="ranged_salary">
                                 <input
                                   type="number"
-                                  disabled={
-                                    editingMode !== element._id ? true : false
-                                  }
+                                  disabled={editingMode !== element._id}
                                   value={element.salaryFrom}
                                   onChange={(e) =>
-                                    handleInputChange(
-                                      element._id,
-                                      "salaryFrom",
-                                      e.target.value
-                                    )
+                                    handleInputChange(element._id, "salaryFrom", e.target.value)
                                   }
                                 />
                                 <input
                                   type="number"
-                                  disabled={
-                                    editingMode !== element._id ? true : false
-                                  }
+                                  disabled={editingMode !== element._id}
                                   value={element.salaryTo}
                                   onChange={(e) =>
-                                    handleInputChange(
-                                      element._id,
-                                      "salaryTo",
-                                      e.target.value
-                                    )
+                                    handleInputChange(element._id, "salaryTo", e.target.value)
                                   }
                                 />
                               </div>
-                            )}
-                          </span>
-                        </div>
-                        <div>
-                          {" "}
-                          <span>Expired:</span>
-                          <select
-                            value={element.expired}
-                            onChange={(e) =>
-                              handleInputChange(
-                                element._id,
-                                "expired",
-                                e.target.value
-                              )
-                            }
-                            disabled={
-                              editingMode !== element._id ? true : false
-                            }
-                          >
-                            <option value={true}>TRUE</option>
-                            <option value={false}>FALSE</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div className="long_field">
-                        <div>
-                          <span>Description:</span>{" "}
+                            </div>
+                          )}
+
+                          <label>Description</label>
                           <textarea
                             rows={5}
+                            disabled={editingMode !== element._id}
                             value={element.description}
-                            disabled={
-                              editingMode !== element._id ? true : false
-                            }
                             onChange={(e) =>
-                              handleInputChange(
-                                element._id,
-                                "description",
-                                e.target.value
-                              )
+                              handleInputChange(element._id, "description", e.target.value)
                             }
                           />
                         </div>
-                        <div>
-                          <span>Location: </span>
-                          <textarea
-                            value={element.location}
-                            rows={5}
-                            disabled={
-                              editingMode !== element._id ? true : false
-                            }
-                            onChange={(e) =>
-                              handleInputChange(
-                                element._id,
-                                "location",
-                                e.target.value
-                              )
-                            }
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    {/* Out Of Content Class */}
-                    <div className="button_wrapper">
-                      <div className="edit_btn_wrapper">
-                        {editingMode === element._id ? (
-                          <>
-                            <button
-                              onClick={() => handleUpdateJob(element._id)}
-                              className="check_btn"
-                            >
-                              <FaCheck />
-                            </button>
-                            <button
-                              onClick={() => handleDisableEdit()}
-                              className="cross_btn"
-                            >
-                              <RxCross2 />
-                            </button>
-                          </>
-                        ) : (
+
+                        <div className="button_wrapper" style={{ marginTop: "16px" }}>
+                          <div className="edit_btn_wrapper">
+                            {editingMode === element._id ? (
+                              <>
+                                <button
+                                  onClick={() => handleUpdateJob(element._id)}
+                                  className="check_btn"
+                                >
+                                  <FaCheck />
+                                </button>
+                                <button
+                                  onClick={() => handleDisableEdit()}
+                                  className="cross_btn"
+                                >
+                                  <RxCross2 />
+                                </button>
+                              </>
+                            ) : (
+                              <button
+                                onClick={() => handleEnableEdit(element._id)}
+                                className="edit_btn"
+                              >
+                                Edit
+                              </button>
+                            )}
+                          </div>
                           <button
-                            onClick={() => handleEnableEdit(element._id)}
-                            className="edit_btn"
+                            onClick={() => handleDeleteJob(element._id)}
+                            className="delete_btn"
                           >
-                            Edit
+                            Delete
                           </button>
-                        )}
+                        </div>
                       </div>
-                      <button
-                        onClick={() => handleDeleteJob(element._id)}
-                        className="delete_btn"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                    ))}
+                </div>
               </div>
             </>
           ) : (
