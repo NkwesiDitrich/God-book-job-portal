@@ -46,9 +46,11 @@ const Jobs = () => {
             Browse and filter open roles to find your next opportunity.
           </p>
           {user?.role === "Employer" ? (
-            <p className="muted">
-              You are logged in as an Employer. Switch to a Job Seeker account to submit applications.
-            </p>
+            <div style={{ marginTop: "8px" }}>
+              <Link to="/job/post" className="btn btn-primary">
+                Post a New Job
+              </Link>
+            </div>
           ) : null}
         </div>
         <div className="jobs-search">

@@ -23,7 +23,7 @@ const PostJob = () => {
     e.preventDefault();
     if (salaryType === "Fixed Salary") {
       setSalaryFrom("");
-      setSalaryFrom("");
+      setSalaryTo("");
     } else if (salaryType === "Ranged Salary") {
       setFixedSalary("");
     } else {
@@ -63,6 +63,7 @@ const PostJob = () => {
       )
       .then((res) => {
         toast.success(res.data.message);
+        navigateTo("/job/getall");
       })
       .catch((err) => {
         toast.error(err.response.data.message);
