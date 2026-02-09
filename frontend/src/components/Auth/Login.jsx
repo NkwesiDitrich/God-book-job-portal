@@ -11,7 +11,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
 
-  const { isAuthorized, setIsAuthorized } = useContext(Context);
+  const { isAuthorized, setIsAuthorized, setUser } = useContext(Context);
   const navigateTo = useNavigate();
 
   const handleLogin = async (e) => {
@@ -31,6 +31,7 @@ const Login = () => {
       setEmail("");
       setPassword("");
       setRole("");
+      setUser(data.user);
       setIsAuthorized(true);
       navigateTo("/");
     } catch (error) {

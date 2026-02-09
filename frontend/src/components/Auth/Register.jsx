@@ -35,6 +35,7 @@ const Register = () => {
       setPassword("");
       setPhone("");
       setRole("");
+      setUser(data.user);
       setIsAuthorized(true);
       navigateTo("/");
     } catch (error) {
