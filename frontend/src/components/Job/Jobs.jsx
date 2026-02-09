@@ -3,6 +3,8 @@ import axios from "axios";
 import { Link, Navigate } from "react-router-dom";
 import { Context } from "../../main";
 
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
+
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
   const [query, setQuery] = useState("");
@@ -10,7 +12,7 @@ const Jobs = () => {
   useEffect(() => {
     try {
       axios
-        .get("http://localhost:4000/api/v1/job/getall", {
+        .get(`${API_BASE}/api/v1/job/getall`, {
           withCredentials: true,
         })
         .then((res) => {

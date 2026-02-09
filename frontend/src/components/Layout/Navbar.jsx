@@ -7,6 +7,8 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaBriefcase } from "react-icons/fa";
 
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
+
 const Navbar = () => {
   const [show, setShow] = useState(false);
   const { isAuthorized, setIsAuthorized, user } = useContext(Context);
@@ -15,10 +17,8 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:4000/api/v1/user/logout",
-        {
-          withCredentials: true,
-        }
+        `${API_BASE}/api/v1/user/logout`,
+        { withCredentials: true }
       );
       toast.success(response.data.message);
       setIsAuthorized(false);

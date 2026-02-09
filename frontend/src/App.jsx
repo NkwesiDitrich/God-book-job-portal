@@ -17,16 +17,16 @@ import PostJob from "./components/Job/PostJob";
 import NotFound from "./components/NotFound/NotFound";
 import MyJobs from "./components/Job/MyJobs";
 
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
+
 const App = () => {
   const { isAuthorized, setIsAuthorized, setUser } = useContext(Context);
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/v1/user/getuser",
-          {
-            withCredentials: true,
-          }
+          `${API_BASE}/api/v1/user/getuser`,
+          { withCredentials: true }
         );
         setUser(response.data.user);
         setIsAuthorized(true);

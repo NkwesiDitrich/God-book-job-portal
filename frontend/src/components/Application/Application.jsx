@@ -4,6 +4,8 @@ import toast from "react-hot-toast";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { Context } from "../../main";
 
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
+
 const Application = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -72,7 +74,7 @@ const Application = () => {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:4000/api/v1/application/post",
+        `${API_BASE}/api/v1/application/post`,
         formData,
         {
           withCredentials: true,
